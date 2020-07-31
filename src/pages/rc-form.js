@@ -6,6 +6,7 @@ import createForm from "../components/rc-form";
 const nameRules = { required: true, message: "请输⼊姓名！" };
 const passworRules = { required: true, message: "请输⼊密码！" };
 
+@createForm
 class RCForm extends Component {
   submit = () => {
     const { validateFields } = this.props.form;
@@ -42,4 +43,4 @@ class RCForm extends Component {
   }
 }
 
-export default createForm(RCForm);
+export default RCForm;

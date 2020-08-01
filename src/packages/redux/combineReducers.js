@@ -7,7 +7,6 @@
 //     }
 // }
 
-// 今日暗号：毛里塔尼亚
 function isObject(v) {
   return Object.prototype.toString.call(v) === "[object Object]";
 }

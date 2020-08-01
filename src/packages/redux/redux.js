@@ -4,7 +4,11 @@
  *  只能由dispatch修改数据
  */
 
-export default function createStore(reducer) {
+export default function createStore(reducer, enhancer) {
+  if (enhancer) {
+    return enhancer(createStore)(reducer);
+  }
+
   let state;
   let listeners = [];
 
@@ -31,4 +35,32 @@ export default function createStore(reducer) {
   dispatch({ type: "XXXXXX" });
 
   return { getState, dispatch, subscribe };
+}
+
+export function applyMiddleware(...middlewares) {
+  return (createStore) => (reducer) => {
+    const store = createStore(reducer);
+    let dispatch = store.dispatch;
+    const midApi = {
+      getState: store.getState,
+      dispatch: (action, ...args) => dispatch(action, ...args),
+    };
+    const middlewareChain = middlewares.map((middleware) => middleware(midApi));
+    dispatch = compose(...middlewareChain)(store.dispatch);
+    return { ...store, dispatch };
+  };
+}
+
+function compose(...opts) {
+  if (opts.length === 0) {
+    return () => {};
+  }
+
+  if (opts.length === 1) {
+    return opts[0];
+  }
+
+  return opts.reduce((accumulator, currentValue) => {
+    return (...args) => accumulator(currentValue(...args));
+  });
 }

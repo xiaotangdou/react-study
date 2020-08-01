@@ -1,4 +1,10 @@
-import { createStore, combineReducers } from "../packages/redux";
+import {
+  createStore,
+  combineReducers,
+  applyMiddleware,
+} from "../packages/redux";
+import reduxThunk from "../packages/redux-thunk";
+import reduxPromise from "../packages/redux-promise";
 
 function counter(state = { count: 0 }, action) {
   switch (action.type) {
@@ -22,4 +28,7 @@ function counter2(state = { count: 0 }, action) {
   }
 }
 
-export default createStore(combineReducers({ counter, counter2 }));
+export default createStore(
+  combineReducers({ counter, counter2 }),
+  applyMiddleware(reduxThunk, reduxPromise)
+);

@@ -1,8 +1,5 @@
 import React from "react";
 import store from "../store";
-import { Button } from "antd";
-
-console.log(store);
 
 export default class ReduxPage extends React.Component {
   componentDidMount() {
@@ -11,6 +8,18 @@ export default class ReduxPage extends React.Component {
 
   handleAdd = () => {
     store.dispatch({ type: "ADD" });
+  };
+
+  handleFunctionAdd = () => {
+    store.dispatch((dispatch) => {
+      setTimeout(() => {
+        dispatch({ type: "ADD" });
+      }, 3000);
+    });
+  };
+
+  handlePromiseAdd = () => {
+    store.dispatch(new Promise((resolve) => resolve({ type: "ADD" })));
   };
 
   handleMinus = () => {
@@ -23,8 +32,10 @@ export default class ReduxPage extends React.Component {
         <h3>ReduxPage</h3>
         <p>counter: {store.getState().counter.count}</p>
         <p>counter2: {store.getState().counter2.count}</p>
-        <Button onClick={this.handleAdd}>add</Button>
-        <Button onClick={this.handleMinus}>minus</Button>
+        <button onClick={this.handleAdd}>add</button>
+        <button onClick={this.handleFunctionAdd}>function add</button>
+        <button onClick={this.handlePromiseAdd}>Promise add</button>
+        <button onClick={this.handleMinus}>minus</button>
       </div>
     );
   }

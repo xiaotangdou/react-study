@@ -1,13 +1,31 @@
 import React from "react";
+import { Divider } from "antd";
 
-// import RcFormField from "./pages/rc-form-field";
-// import RCForm from "./pages/rc-form";
+import { Link, BrowserRouter, Route } from "./packages/react-router";
+
+import RcFormField from "./pages/rc-form-field";
+import RCForm from "./pages/rc-form";
 import ReduxPage from "./pages/redux-page";
 
 export default function App() {
-  // return <RcFormField />;
-  // return <RCForm />;
-  return <ReduxPage />;
+  return (
+    <BrowserRouter>
+      <Link to="/">首页</Link>
+      <Divider type="vertical" />
+      <Link to="/form/field">RcFormField</Link>
+      <Divider type="vertical" />
+      <Link to="/form">RCForm</Link>
+      <Divider type="vertical" />
+      <Link to="/redux">ReduxPage</Link>
 
-  // return <div>test</div>;
+      <Route path="/" component={Home} />
+      <Route path="/form/field" component={RcFormField} />
+      <Route path="/form" component={RCForm} />
+      <Route path="/redux" component={ReduxPage} />
+    </BrowserRouter>
+  );
+}
+
+function Home() {
+  return <div>home</div>;
 }

@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import RouterContext from "./RouterContext";
 
 export default class Router extends Component {
+  static computeRootMatch(pathname) {
+    return { path: "/", url: "/", params: {}, isExact: pathname === "/" };
+  }
+
   constructor(props) {
     super(props);
 
@@ -12,8 +16,8 @@ export default class Router extends Component {
     };
 
     // 监听当前的地址变换
-    this.unlisten = history.listen((location) => {
-      this.setState({ location });
+    this.unlisten = history.listen((payload) => {
+      this.setState({ location: payload.location });
     });
   }
 
@@ -28,7 +32,13 @@ export default class Router extends Component {
     const { location } = this.state;
 
     return (
-      <RouterContext.Provider value={{ history, location }}>
+      <RouterContext.Provider
+        value={{
+          history,
+          location,
+          match: Router.computeRootMatch(this.state.location.pathname),
+        }}
+      >
         {children}
       </RouterContext.Provider>
     );

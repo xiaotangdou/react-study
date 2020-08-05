@@ -1,15 +1,42 @@
 import React, { Component } from "react";
+import RouterContext from "./RouterContext";
+import matchPath from "./matchPath";
 
 export default class Route extends Component {
   render() {
-    const { component, path } = this.props;
+    const { children, component, render, path, computedMatch } = this.props;
 
-    console.log(path);
+    return (
+      <RouterContext.Consumer>
+        {(context) => {
+          const { history, location, match } = context;
 
-    if (window.location.pathname === path) {
-      return React.createElement(component);
-    }
+          let _match = null;
+          if (computedMatch) {
+            _match = computedMatch;
+          } else if (path) {
+            _match = matchPath(location.pathname, this.props);
+          } else {
+            _match = match;
+          }
 
-    return null;
+          const props = { history, location, match: _match };
+
+          if (_match) {
+            if (typeof children === "function") {
+              return children(props);
+            } else if (component) {
+              return React.createElement(component, props);
+            } else if (typeof render === "function") {
+              return render(props);
+            } else {
+              return null;
+            }
+          } else {
+            return typeof children === "function" ? children(props) : null;
+          }
+        }}
+      </RouterContext.Consumer>
+    );
   }
 }
